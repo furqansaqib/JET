@@ -4,7 +4,8 @@ AS $procedure$
 
 BEGIN
 	
-INSERT INTO jet.fact_reviews 
+INSERT INTO jet.fact_product_reviews(review_date, price_bucket_key, reviewer_key, review_key, asin, 
+price, sales_rank, helpful_votes, non_helpful_votes, total_votes, overall, is_viewed_and_bought)
 SELECT  
 p_startdate as review_date,
 dpb.price_bucket_key as price_bucket_key,
