@@ -1,0 +1,24 @@
+psql:
+  server: localhost
+  port: 5432
+  database: postgres
+  username: postgres
+  password: test
+
+email:
+  to: furqansaqibb@gmail.com
+  cc: furqansaqibb@gmail.com
+
+source:
+  product: https://s3-eu-west-1.amazonaws.com/bigdata-team/job-interview/metadata.json.gz
+  reviews: https://s3-eu-west-1.amazonaws.com/bigdata-team/job-interview/item_dedup.json.gz
+
+destination:
+  folder: D:\Interviews\JET\dataset
+  product: D:\Interviews\JET\dataset\metadata.json.gz\metadata.json.gz
+  reviews: D:\Interviews\JET\datasetitem_dedup.json.gz\item_dedup.json.gz
+ 
+unzipped:
+  product: D:\Interviews\JET\dataset\metadata.json
+  reviews: D:\Interviews\JET\dataset\item_dedup.json
+
