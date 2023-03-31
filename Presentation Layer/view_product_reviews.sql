@@ -34,7 +34,7 @@ AS SELECT dt.date,
    FROM jet.fact_product_reviews fact
      JOIN jet.dim_date dt ON fact.review_date = dt.date
      LEFT JOIN jet.dim_product pr ON fact.asin = pr.asin
-     JOIN jet.dim_product_category pc ON pr.product_category_key = pc.product_category_key
+     LEFT JOIN jet.dim_product_category pc ON pr.product_category_key = pc.product_category_key
      LEFT JOIN jet.dim_review rv ON fact.review_key = rv.review_key
      LEFT JOIN jet.dim_reviewer rvr ON fact.reviewer_key = rvr.reviewer_key
      LEFT JOIN jet.dim_price_bucket pb ON fact.price_bucket_key = pb.price_bucket_key;
