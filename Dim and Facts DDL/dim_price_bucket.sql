@@ -1,7 +1,7 @@
 CREATE TABLE jet.dim_price_bucket (
   price_bucket_key serial PRIMARY KEY,
-  min_price smallint,
-  max_price smallint,
+  min_price float8,
+  max_price float8,
   bucket_range CHAR(10) NOT NULL
 );
 
