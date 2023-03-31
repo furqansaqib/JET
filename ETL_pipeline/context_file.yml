@@ -17,6 +17,8 @@ destination:
   folder: D:\Interviews\JET\dataset
   product: D:\Interviews\JET\dataset\metadata.json.gz\metadata.json.gz
   reviews: D:\Interviews\JET\datasetitem_dedup.json.gz\item_dedup.json.gz
+  product_filename: metadata.json.gz
+  reviews_filename: item_dedup.json.gz
  
 unzipped:
   product: D:\Interviews\JET\dataset\metadata.json

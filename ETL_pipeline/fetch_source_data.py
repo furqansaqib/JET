@@ -13,7 +13,7 @@ import io
 
 #Read context variables from Yaml File
 def read_context_variables():
-    global server, database, username, password, port, email_to, email_from, product_url, reviews_url, product_dest, reviews_dest, dest_folder, product_unzipped, reviews_unzipped
+    global server, database, username, password, port, email_to, email_from, product_url, reviews_url, product_dest, reviews_dest, dest_folder, product_unzipped, reviews_unzipped,product_filename,reviews_filename
     try:
         with open("D:\Interviews\JET\code\context_file.yml", 'r') as f:
             config = yaml.safe_load(f)
@@ -44,6 +44,8 @@ def read_context_variables():
         dest_folder=config['destination']['reviews']
         product_unzipped=config['unzipped']['product']
         reviews_unzipped=config['unzipped']['reviews']
+        product_filename=config['destination']['product_filename']
+        reviews_filename=config['destination']['reviews_filename']
     except KeyError as e:
         print(f"Error: Missing key in context file: {e}")
         return False
@@ -113,20 +115,18 @@ def download_file_in_threads(url, destination_folder, chunk_size):
         for thread in threads:
             thread.join()
         print(f'{file_name} downloaded to {destination_folder}')
-        fix_file_extension(destination_folder)
     except (requests.exceptions.RequestException, IOError) as e:
         print(f'Error occurred while downloading file: {e}')
 
 
 
-def uncompress_file(gz_path, dest_folder, chunk_size=1024*1024*1024*4):
+def uncompress_file(gz_path, dest_folder,file_name, chunk_size=1024*1024*1024*4):
     try:
         # Create the destination folder if it doesn't exist
         if not os.path.exists(dest_folder):
             os.makedirs(dest_folder)
 
         # Construct the destination file path
-        file_name = "metadata.json.gz"
         dest_path = os.path.join(dest_folder, file_name[:-3])
 
         # Open the gzipped file and read its contents in chunks
@@ -140,6 +140,7 @@ def uncompress_file(gz_path, dest_folder, chunk_size=1024*1024*1024*4):
                 json_file.write(decoded_chunk)
 
         print(f'{file_name} extracted to {dest_path}')
+        fix_file_extension(dest_folder)
     except Exception as e:
         print(f'Error occurred while uncompressing file: {e}')
 
@@ -202,12 +203,10 @@ def load_reviews_dataset(file_path):
         # Open the JSON file and read each line
         with open(file_path, "r") as f:
             for line in f:
-                counter += 1
-                if counter > 55682627:
                     # Remove NULL Bytes from string
                     line = line.replace("\\x00", "")
                     line = line.replace("\\u0000", "")
-
+                    
                     # Parse the JSON object
                     data = json.loads(line)
 
@@ -240,8 +239,6 @@ def load_reviews_dataset(file_path):
                             ),
                         )
                     conn.commit()
-                else:
-                    continue
     except (IOError, OSError) as e:
         print(f"Error loading file: {e}")
     except Exception as e:
@@ -253,8 +250,8 @@ if __name__ == "__main__":
     read_context_variables()
     download_file_in_threads(product_url,dest_folder,4) # data fetched by each thread = 4GB
     download_file_in_threads(reviews_url,dest_folder,4) # data fetched by each thread = 4GB
-    uncompress_file(product_dest,dest_folder) #uncompress product Metadata File
-    uncompress_file(reviews_dest,dest_folder) #uncompress review data
+    uncompress_file(product_dest,dest_folder,product_filename) #uncompress product Metadata File
+    uncompress_file(reviews_dest,dest_folder,reviews_filename) #uncompress review data
     create_pg_connection(server,database,username,password,port) #Create Database Connection
     load_products_dataset(product_unzipped) #load product data into PSQL
     load_reviews_dataset(reviews_unzipped) #loads review data into PSQL
