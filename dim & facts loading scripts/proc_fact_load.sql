@@ -17,8 +17,7 @@ dp_stg.sales_rank,
 drar.helpful_votes,
 drar.non_helpful_votes,
 drar.total_votes,
-drar.overall as overall_score,
-dp_stg.is_viewed_and_bought
+drar.overall as overall_score
 FROM jet.dim_product dp
 INNER JOIN jet.dim_product_stg dp_stg
 ON dp.ASIN = dp_stg.ASIN
